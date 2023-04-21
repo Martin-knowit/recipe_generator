@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'InputScreen.dart';
 
 class RecipeGPTApp extends StatelessWidget {
   const RecipeGPTApp({Key? key}) : super(key: key);
@@ -23,7 +24,10 @@ class RecipeGPTApp extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Navigate to the next screen.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InputScreen()),
+                );
               },
               child: Text('Start'),
             ),
