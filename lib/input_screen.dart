@@ -43,14 +43,17 @@ class _InputScreenState extends State<InputScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Spacer(),
                 Wrap(
                   spacing: 8.0,
+                  runSpacing: 8.0,
                   children: [
                     for (final product in selectedProducts)
                       Chip(
                         label: Text(product),
                         deleteIcon: Icon(Icons.clear),
                         onDeleted: () => _removeProduct(product),
+                        backgroundColor: Colors.blue,
                       ),
                   ],
                 ),
@@ -120,6 +123,7 @@ class _InputScreenState extends State<InputScreen> {
                     style: TextStyle(fontSize: 24.0),
                   ),
                 ),
+                Spacer(),
               ],
             ),
           ),
