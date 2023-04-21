@@ -60,12 +60,17 @@ class _InputScreenState extends State<InputScreen> {
                     labelText: 'Search or add food products',
                     border: OutlineInputBorder(),
                   ),
+                  onEditingComplete: () {
+                    final value = _typeAheadController.text;
+                    _addProduct(value);
+                  },
                 ),
                 suggestionsCallback: (pattern) {
                   return [
                     ...foodProducts
-                        .where((product) =>
-                            product.toLowerCase().contains(pattern.toLowerCase()))
+                        .where((product) => product
+                            .toLowerCase()
+                            .contains(pattern.toLowerCase()))
                         .toList(),
                     if (pattern.isNotEmpty) pattern,
                   ];
