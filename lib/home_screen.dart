@@ -48,7 +48,8 @@ class RecipeGPTApp extends StatelessWidget {
                       sigmaY: 5.0,
                     ),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 16.0),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.2),
                       ),
@@ -67,10 +68,15 @@ class RecipeGPTApp extends StatelessWidget {
                           SizedBox(height: 32.0),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => InputScreen()),
-                              );
+                              Navigator.of(context).push(PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 500),
+                                pageBuilder: (context, animation,
+                                    secondaryAnimation) => InputScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                    opacity: animation, child: child,);
+                                },),);
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
