@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'ingredients.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({Key? key}) : super(key: key);
@@ -10,28 +11,6 @@ class InputScreen extends StatefulWidget {
 
 class _InputScreenState extends State<InputScreen> {
   List<String> selectedProducts = [];
-
-  final List<String> foodProducts = [
-    'Apple',
-    'Banana',
-    'Broccoli',
-    'Carrot',
-    'Celery',
-    'Cheese',
-    'Egg',
-    'Fish',
-    'Garlic',
-    'Lettuce',
-    'Milk',
-    'Orange',
-    'Potato',
-    'Spinach',
-    'Tomato',
-    'Turkey',
-    'Watermelon',
-    'Yogurt',
-    'Zucchini',
-  ];
 
   final TextEditingController _typeAheadController = TextEditingController();
 
