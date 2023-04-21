@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:recipe_generator/API/APIKEY.dart';
+import 'package:recipe_generator/Recipe.dart';
 
-Future<Object> getRecipe(String prompt) async {
+Future<Recipe> getRecipe(String prompt) async {
   final String url =
       'https://api.openai.com/v1/chat/completions';
   final String model = 'gpt-3.5-turbo';
@@ -34,6 +35,6 @@ Future<Object> getRecipe(String prompt) async {
 
   final Map<String, dynamic> responseData = json.decode(response.body);
   final String output = responseData['choices'][0]['message']['content'];
-  final Object recipe = jsonDecode(utf8.decode(output.runes.toList()));
+  final Recipe recipe = Recipe.fromJson(jsonDecode(utf8.decode(output.runes.toList())));
   return recipe;
 }
