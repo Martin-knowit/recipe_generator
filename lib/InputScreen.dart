@@ -11,7 +11,27 @@ class InputScreen extends StatefulWidget {
 class _InputScreenState extends State<InputScreen> {
   List<String> selectedProducts = [];
 
-  final List<String> foodProducts = [    'Apple',    'Banana',    'Broccoli',    'Carrot',    'Celery',    'Cheese',    'Egg',    'Fish',    'Garlic',    'Lettuce',    'Milk',    'Orange',    'Potato',    'Spinach',    'Tomato',    'Turkey',    'Watermelon',    'Yogurt',    'Zucchini',  ];
+  final List<String> foodProducts = [
+    'Apple',
+    'Banana',
+    'Broccoli',
+    'Carrot',
+    'Celery',
+    'Cheese',
+    'Egg',
+    'Fish',
+    'Garlic',
+    'Lettuce',
+    'Milk',
+    'Orange',
+    'Potato',
+    'Spinach',
+    'Tomato',
+    'Turkey',
+    'Watermelon',
+    'Yogurt',
+    'Zucchini',
+  ];
 
   final TextEditingController _typeAheadController = TextEditingController();
 
@@ -27,79 +47,74 @@ class _InputScreenState extends State<InputScreen> {
       appBar: AppBar(
         title: Text('Input Screen'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade100,
-              Colors.blueGrey.shade100,
-            ],
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TypeAheadField(
-                  textFieldConfiguration: TextFieldConfiguration(
-                    controller: _typeAheadController,
-                    decoration: InputDecoration(
-                      labelText: 'Search for food products',
-                      border: OutlineInputBorder(),
-                    ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TypeAheadField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: _typeAheadController,
+                  decoration: InputDecoration(
+                    labelText: 'Search or add food products',
+                    border: OutlineInputBorder(),
                   ),
-                  suggestionsCallback: (pattern) {
-                    return foodProducts
+                ),
+                suggestionsCallback: (pattern) {
+                  return [
+                    ...foodProducts
                         .where((product) =>
-                            product
-                                .toLowerCase()
-                                .contains(pattern.toLowerCase()))
-                        .toList();
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return ListTile(
-                      title: Text(suggestion),
-                    );
-                  },
-                  onSuggestionSelected: (suggestion) {
-                    _typeAheadController.text = '';
-                    setState(() {
-                      selectedProducts.add(suggestion);
-                    });
-                  },
-                ),
-                SizedBox(height: 16.0),
-                Wrap(
-                  spacing: 8.0,
-                  children: [
-                    for (final product in selectedProducts)
-                      Chip(
-                        label: Text(product),
-                        deleteIcon: Icon(Icons.clear),
-                        onDeleted: () {
-                          setState(() {
-                            selectedProducts.remove(product);
-                          });
-                        },
-                      ),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    print({'selected_products': selectedProducts});
-                  },
-                  child: Text('Submit'),
-                ),
-              ],
-            ),
+                            product.toLowerCase().contains(pattern.toLowerCase()))
+                        .toList(),
+                    if (pattern.isNotEmpty) pattern,
+                  ];
+                },
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  _typeAheadController.text = '';
+                  _addProduct(suggestion);
+                },
+              ),
+              SizedBox(height: 16.0),
+              Wrap(
+                spacing: 8.0,
+                children: [
+                  for (final product in selectedProducts)
+                    Chip(
+                      label: Text(product),
+                      deleteIcon: Icon(Icons.clear),
+                      onDeleted: () => _removeProduct(product),
+                    ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  print({'selected_products': selectedProducts});
+                },
+                child: Text('Submit'),
+              ),
+            ],
           ),
         ),
       ),
     );
+  }
+
+  void _addProduct(String product) {
+    setState(() {
+      selectedProducts.add(product);
+    });
+  }
+
+  void _removeProduct(String product) {
+    setState(() {
+      selectedProducts.remove(product);
+    });
   }
 }
