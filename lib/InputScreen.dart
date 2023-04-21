@@ -43,7 +43,6 @@ class _InputScreenState extends State<InputScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 16.0),
                 Wrap(
                   spacing: 8.0,
                   children: [
