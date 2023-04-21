@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:recipe_generator/API/ChatGPT.dart';
 import 'ingredients.dart';
+import 'result.dart';
+import 'Recipe.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({Key? key}) : super(key: key);
@@ -105,8 +107,13 @@ class _InputScreenState extends State<InputScreen> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
-                    Object recipe = await getRecipe(selectedProducts.join(", "));
-                    print(recipe);
+                    Recipe recipe = await getRecipe(selectedProducts.join(", "));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecipeWidget(recipe: recipe),
+                        ),
+                      );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(
