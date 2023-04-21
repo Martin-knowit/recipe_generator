@@ -107,7 +107,7 @@ class _InputScreenState extends State<InputScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.0),
+                      SizedBox(height: 32.0),
                       ElevatedButton(
                         onPressed: () async {
                           Recipe recipe =
@@ -133,7 +133,12 @@ class _InputScreenState extends State<InputScreen> {
                           shadowColor: Colors.black.withOpacity(0.5),
                           primary: Colors.blue,
                         ),
-                        child: Text('Generate Recipe'),
+                        child: Text('Generate Recipe',
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        ),
                       ),
                       Spacer(),
                     ],
