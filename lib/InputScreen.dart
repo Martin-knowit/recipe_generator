@@ -11,7 +11,27 @@ class InputScreen extends StatefulWidget {
 class _InputScreenState extends State<InputScreen> {
   List<String> selectedProducts = [];
 
-  final List<String> foodProducts = [    'Apple',    'Banana',    'Broccoli',    'Carrot',    'Celery',    'Cheese',    'Egg',    'Fish',    'Garlic',    'Lettuce',    'Milk',    'Orange',    'Potato',    'Spinach',    'Tomato',    'Turkey',    'Watermelon',    'Yogurt',    'Zucchini',  ];
+  final List<String> foodProducts = [
+    'Apple',
+    'Banana',
+    'Broccoli',
+    'Carrot',
+    'Celery',
+    'Cheese',
+    'Egg',
+    'Fish',
+    'Garlic',
+    'Lettuce',
+    'Milk',
+    'Orange',
+    'Potato',
+    'Spinach',
+    'Tomato',
+    'Turkey',
+    'Watermelon',
+    'Yogurt',
+    'Zucchini',
+  ];
 
   final TextEditingController _typeAheadController = TextEditingController();
 
@@ -40,10 +60,22 @@ class _InputScreenState extends State<InputScreen> {
         ),
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                SizedBox(height: 16.0),
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    for (final product in selectedProducts)
+                      Chip(
+                        label: Text(product),
+                        deleteIcon: Icon(Icons.clear),
+                        onDeleted: () => _removeProduct(product),
+                      ),
+                  ],
+                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: Card(
@@ -61,14 +93,14 @@ class _InputScreenState extends State<InputScreen> {
                         ),
                         onEditingComplete: () {
                           final value = _typeAheadController.text;
+                          _typeAheadController.clear();
                           _addProduct(value);
                         },
                       ),
                       suggestionsCallback: (pattern) {
                         return [
                           ...foodProducts
-                              .where((product) =>
-                              product
+                              .where((product) => product
                                   .toLowerCase()
                                   .contains(pattern.toLowerCase()))
                               .toList(),
@@ -81,23 +113,11 @@ class _InputScreenState extends State<InputScreen> {
                         );
                       },
                       onSuggestionSelected: (suggestion) {
-                        _typeAheadController.text = '';
+                        _typeAheadController.clear();
                         _addProduct(suggestion);
                       },
                     ),
                   ),
-                ),
-                SizedBox(height: 16.0),
-                Wrap(
-                  spacing: 8.0,
-                  children: [
-                    for (final product in selectedProducts)
-                      Chip(
-                        label: Text(product),
-                        deleteIcon: Icon(Icons.clear),
-                        onDeleted: () => _removeProduct(product),
-                      ),
-                  ],
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
@@ -118,9 +138,7 @@ class _InputScreenState extends State<InputScreen> {
                   ),
                   child: Text(
                     'Get Recipe',
-                    style: TextStyle(
-                        fontSize: 24.0
-                    ),
+                    style: TextStyle(fontSize: 24.0),
                   ),
                 ),
               ],
