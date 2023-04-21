@@ -78,7 +78,7 @@ class _InputScreenState extends State<InputScreen> {
                 ),
                 SizedBox(height: 16.0),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.6,
+                  width: MediaQuery.of(context).size.width * 0.65,
                   child: Card(
                     elevation: 5.0,
                     shadowColor: Colors.black.withOpacity(0.5),
