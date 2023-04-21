@@ -6,7 +6,7 @@ Future<Object> getRecipe(String prompt) async {
   final String url =
       'https://api.openai.com/v1/chat/completions';
   final String model = 'gpt-3.5-turbo';
-  final int maxTokens = 256;
+  final int maxTokens = 1024;
   final int temperature = 0;
 
   final Map<String, dynamic> data = {
