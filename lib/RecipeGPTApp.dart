@@ -22,17 +22,28 @@ class RecipeGPTApp extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Welcome to our Recipe AI Generator!',
-                  style: TextStyle(
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
+              Image.asset(
+                'assets/recipe-wizard.png',
+                width: 250,
+                height: 250,
+              ),
+              Text(
+                'Recipe Wizard',
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                'Making a delicious treat for you every day',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: 32.0),
               ElevatedButton(

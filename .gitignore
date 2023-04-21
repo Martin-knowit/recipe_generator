@@ -1,3 +1,19 @@
+# Flutter/Dart-specific files
+.vscode/
+.dart_tool/
+.packages
+.pub-cache/
+/build/
+.idea/
+.iml
+.flutter-plugins
+.flutter-plugins-dependencies
+*/*.iml
+*/*.log
+*/*.pot
+*/*.pot.arb
+*.tgz
+
 # Gradle files
 .gradle/
 build/
@@ -31,4 +47,3 @@ google-services.json
 
 # Android Profiling
 *.hprof
-.dart_tool/
