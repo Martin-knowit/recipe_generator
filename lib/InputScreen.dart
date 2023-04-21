@@ -30,80 +30,74 @@ class _InputScreenState extends State<InputScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
-              Color(0xFFD9AFD9),
-              Color(0xFF97D9E1),
+              Colors.blue.shade100,
+              Colors.blueGrey.shade100,
             ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TypeAheadField(
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: _typeAheadController,
-                decoration: InputDecoration(
-                  labelText: 'Search for food products',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              suggestionsCallback: (pattern) {
-                return foodProducts
-                    .where((product) =>
-                        product.toLowerCase().contains(pattern.toLowerCase()))
-                    .toList();
-              },
-              itemBuilder: (context, suggestion) {
-                return ListTile(
-                  title: Text(suggestion),
-                );
-              },
-              onSuggestionSelected: (suggestion) {
-                _typeAheadController.text = '';
-                setState(() {
-                  selectedProducts.add(suggestion);
-                });
-              },
-            ),
-            SizedBox(height: 16.0),
-            Wrap(
-              spacing: 8.0,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (final product in selectedProducts)
-                  Chip(
-                    label: Text(product),
-                    deleteIcon: Icon(Icons.clear),
-                    onDeleted: () {
-                      setState(() {
-                        selectedProducts.remove(product);
-                      });
-                    },
+                TypeAheadField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    controller: _typeAheadController,
+                    decoration: InputDecoration(
+                      labelText: 'Search for food products',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
+                  suggestionsCallback: (pattern) {
+                    return foodProducts
+                        .where((product) =>
+                            product
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()))
+                        .toList();
+                  },
+                  itemBuilder: (context, suggestion) {
+                    return ListTile(
+                      title: Text(suggestion),
+                    );
+                  },
+                  onSuggestionSelected: (suggestion) {
+                    _typeAheadController.text = '';
+                    setState(() {
+                      selectedProducts.add(suggestion);
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    for (final product in selectedProducts)
+                      Chip(
+                        label: Text(product),
+                        deleteIcon: Icon(Icons.clear),
+                        onDeleted: () {
+                          setState(() {
+                            selectedProducts.remove(product);
+                          });
+                        },
+                      ),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    print({'selected_products': selectedProducts});
+                  },
+                  child: Text('Submit'),
+                ),
               ],
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                print({'selected_products': selectedProducts});
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                onPrimary: Colors.black,
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                textStyle: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                elevation: 10,
-              ),
-              child: Text('Submit'),
-            ),
-          ],
+          ),
         ),
       ),
     );
