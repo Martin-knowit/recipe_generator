@@ -7,9 +7,6 @@ class RecipeGPTApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Recipe GPT'),
-      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -22,11 +19,13 @@ class RecipeGPTApp extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                'assets/recipe-wizard.png',
-                width: 250,
-                height: 250,
+              Flexible(
+                child: Image.asset(
+                  'assets/recipe-wizard.png',
+                  fit: BoxFit.contain,
+                ),
               ),
+              SizedBox(height: 16.0),
               Text(
                 'Recipe Wizard',
                 style: TextStyle(
@@ -75,6 +74,7 @@ class RecipeGPTApp extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 40.0)
             ],
           ),
         ),
