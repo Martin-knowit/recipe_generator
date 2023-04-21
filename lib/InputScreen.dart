@@ -11,27 +11,7 @@ class InputScreen extends StatefulWidget {
 class _InputScreenState extends State<InputScreen> {
   List<String> selectedProducts = [];
 
-  final List<String> foodProducts = [
-    'Apple',
-    'Banana',
-    'Broccoli',
-    'Carrot',
-    'Celery',
-    'Cheese',
-    'Egg',
-    'Fish',
-    'Garlic',
-    'Lettuce',
-    'Milk',
-    'Orange',
-    'Potato',
-    'Spinach',
-    'Tomato',
-    'Turkey',
-    'Watermelon',
-    'Yogurt',
-    'Zucchini',
-  ];
+  final List<String> foodProducts = [    'Apple',    'Banana',    'Broccoli',    'Carrot',    'Celery',    'Cheese',    'Egg',    'Fish',    'Garlic',    'Lettuce',    'Milk',    'Orange',    'Potato',    'Spinach',    'Tomato',    'Turkey',    'Watermelon',    'Yogurt',    'Zucchini',  ];
 
   final TextEditingController _typeAheadController = TextEditingController();
 
@@ -47,64 +27,104 @@ class _InputScreenState extends State<InputScreen> {
       appBar: AppBar(
         title: Text('Input Screen'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TypeAheadField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: _typeAheadController,
-                  decoration: InputDecoration(
-                    labelText: 'Search or add food products',
-                    border: OutlineInputBorder(),
-                  ),
-                  onEditingComplete: () {
-                    final value = _typeAheadController.text;
-                    _addProduct(value);
-                  },
-                ),
-                suggestionsCallback: (pattern) {
-                  return [
-                    ...foodProducts
-                        .where((product) => product
-                            .toLowerCase()
-                            .contains(pattern.toLowerCase()))
-                        .toList(),
-                    if (pattern.isNotEmpty) pattern,
-                  ];
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion),
-                  );
-                },
-                onSuggestionSelected: (suggestion) {
-                  _typeAheadController.text = '';
-                  _addProduct(suggestion);
-                },
-              ),
-              SizedBox(height: 16.0),
-              Wrap(
-                spacing: 8.0,
-                children: [
-                  for (final product in selectedProducts)
-                    Chip(
-                      label: Text(product),
-                      deleteIcon: Icon(Icons.clear),
-                      onDeleted: () => _removeProduct(product),
-                    ),
-                ],
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  print({'selected_products': selectedProducts});
-                },
-                child: Text('Submit'),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.blue.shade100,
+              Colors.blueGrey.shade100,
             ],
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Card(
+                    elevation: 5.0,
+                    shadowColor: Colors.black.withOpacity(0.5),
+                    child: TypeAheadField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _typeAheadController,
+                        decoration: InputDecoration(
+                          labelText: 'Search or add food products',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        onEditingComplete: () {
+                          final value = _typeAheadController.text;
+                          _addProduct(value);
+                        },
+                      ),
+                      suggestionsCallback: (pattern) {
+                        return [
+                          ...foodProducts
+                              .where((product) =>
+                              product
+                                  .toLowerCase()
+                                  .contains(pattern.toLowerCase()))
+                              .toList(),
+                          if (pattern.isNotEmpty) pattern,
+                        ];
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        _typeAheadController.text = '';
+                        _addProduct(suggestion);
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    for (final product in selectedProducts)
+                      Chip(
+                        label: Text(product),
+                        deleteIcon: Icon(Icons.clear),
+                        onDeleted: () => _removeProduct(product),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    //TODO Implement API request
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 48.0,
+                      vertical: 16.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 5.0,
+                    animationDuration: Duration(milliseconds: 200),
+                    shadowColor: Colors.black.withOpacity(0.5),
+                  ),
+                  child: Text(
+                    'Get Recipe',
+                    style: TextStyle(
+                        fontSize: 24.0
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
