@@ -53,13 +53,20 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             DropdownButton<String>(
+              borderRadius: BorderRadius.circular(12.0),
               value: _selectedLanguage,
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedLanguage = newValue!;
                 });
               },
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+              dropdownColor: Colors.white,
               items: <String>[
+                'Svenska',
                 'English',
                 'Spanish',
                 'French',
@@ -68,7 +75,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
                 );
               }).toList(),
             ),
