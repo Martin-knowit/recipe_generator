@@ -5,6 +5,22 @@ import 'package:recipe_generator/API/ChatGPT.dart';
 import 'ingredients.dart';
 import 'result.dart';
 import 'Recipe.dart';
+import 'dart:math';
+
+List<String> randomIngredients(int count) {
+  List<String> selectedIngredients = [];
+  Random random = Random();
+
+  // Pick random ingredients from the array
+  while (selectedIngredients.length < count) {
+    String ingredient = foodProducts[random.nextInt(foodProducts.length)];
+    if (!selectedIngredients.contains(ingredient)) {
+      selectedIngredients.add(ingredient);
+    }
+  }
+
+  return selectedIngredients;
+}
 
 class InputScreen extends StatefulWidget {
   const InputScreen({Key? key}) : super(key: key);
@@ -56,9 +72,15 @@ class _InputScreenState extends State<InputScreen> {
                         addProduct: _addProduct,
                       ),
                       SizedBox(height: 32.0),
-                      GenerateRecipeButton(
-                        selectedProducts: selectedProducts,
-                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GenerateRecipeButton(
+                              selectedProducts: selectedProducts,
+                            ),
+                            SizedBox(width: 8.0),
+                            GenerateRandomRecipeButton(),
+                          ]),
                       Spacer(),
                     ],
                   ),
@@ -73,7 +95,10 @@ class _InputScreenState extends State<InputScreen> {
 
   void _addProduct(String product) {
     product = product.trim();
-    if (selectedProducts.where((a) => a.toLowerCase() == product.toLowerCase()).isEmpty && product.isNotEmpty) {
+    if (selectedProducts
+            .where((a) => a.toLowerCase() == product.toLowerCase())
+            .isEmpty &&
+        product.isNotEmpty) {
       setState(() {
         selectedProducts.add(product);
       });
@@ -91,7 +116,8 @@ class SelectedProducts extends StatelessWidget {
   final List<String> selectedProducts;
   final Function(String) removeProduct;
 
-  SelectedProducts({required this.selectedProducts, required this.removeProduct});
+  SelectedProducts(
+      {required this.selectedProducts, required this.removeProduct});
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +190,6 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-
 class GenerateRecipeButton extends StatelessWidget {
   final List<String> selectedProducts;
 
@@ -197,6 +222,45 @@ class GenerateRecipeButton extends StatelessWidget {
       ),
       child: Text(
         'Generate Recipe',
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+class GenerateRandomRecipeButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        // Generate random ingredients using the randomIngredients() function
+        List<String> ingredients = randomIngredients(8);
+        Recipe recipe = await getRecipe(ingredients.join(", "));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeWidget(recipe: recipe),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(
+          horizontal: 48.0,
+          vertical: 16.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5.0,
+        animationDuration: Duration(milliseconds: 200),
+        shadowColor: Colors.black.withOpacity(0.5),
+        primary: Colors.blue,
+      ),
+      child: Text(
+        'Random Recipe',
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
