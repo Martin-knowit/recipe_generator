@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:recipe_generator/settings_page.dart';
 import 'input_screen.dart';
 
 class RecipeGPTApp extends StatelessWidget {
@@ -16,6 +17,17 @@ class RecipeGPTApp extends StatelessWidget {
             fit: BoxFit.cover,
             height: double.infinity,
             width: double.infinity,
+          ),
+          Positioned(
+            top: 0.0,
+            right: 0.0,
+            child: IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
+            ),
           ),
           Positioned(
             top: 60.0,
