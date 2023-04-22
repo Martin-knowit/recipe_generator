@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_generator/API/APIKEY.dart';
 import 'package:recipe_generator/globals.dart';
 
-String _selectedLanguage = 'English';
+String _selectedLanguage = 'Swedish';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

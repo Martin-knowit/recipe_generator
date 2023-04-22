@@ -19,8 +19,8 @@ class RecipeGPTApp extends StatelessWidget {
             width: double.infinity,
           ),
           Positioned(
-            top: 0.0,
-            right: 0.0,
+            top: 20.0,
+            right: 10.0,
             child: IconButton(
               icon: Icon(Icons.settings),
               onPressed: () {

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:recipe_generator/settings_screen.dart';
 import 'ingredients.dart';
 import 'result.dart';
 import 'Recipe.dart';
@@ -59,48 +60,66 @@ class _InputScreenState extends State<InputScreen> {
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
               color: Colors.black.withOpacity(0.4),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      if (!isLoading) ...[
-                        SelectedProducts(
-                          selectedProducts: selectedProducts,
-                          removeProduct: _removeProduct,
-                        ),
-                        SizedBox(height: 16.0),
-                        SearchBar(
-                          typeAheadController: _typeAheadController,
-                          addProduct: _addProduct,
-                          selectedProducts: selectedProducts,
-                        ),
-                        SizedBox(height: 32.0),
-                        Wrap(
-                          spacing: 8.0, // Space between the buttons horizontally
-                          runSpacing: 8.0, // Space between the buttons vertically
-                          alignment: WrapAlignment.center, // Center the buttons horizontally
-                          children: [
-                            GenerateRecipeButton(
-                                selectedProducts: selectedProducts,
-                                onPressed: _generateRecipe),
-                            GenerateRandomRecipeButton(
-                              onPressed: (List<String> randomSelectedProducts) {
-                                setState(() {
-                                  selectedProducts = randomSelectedProducts;
-                                });
-                                _generateRecipe();
-                              }),
+              child: 
+               Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Stack(
+                  children: [
+                    Positioned(
+                      top: 20.0,
+                      right: 10.0,
+                      child: IconButton(
+                        icon: Icon(Icons.settings),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => SettingsPage()));
+                        },
+                      ),
+                    ),
+                    Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          if (!isLoading) ...[
+                            SelectedProducts(
+                              selectedProducts: selectedProducts,
+                              removeProduct: _removeProduct,
+                            ),
+                            SizedBox(height: 16.0),
+                            SearchBar(
+                              typeAheadController: _typeAheadController,
+                              addProduct: _addProduct,
+                              selectedProducts: selectedProducts,
+                            ),
+                            SizedBox(height: 32.0),
+                            Wrap(
+                              spacing: 8.0, // Space between the buttons horizontally
+                              runSpacing: 8.0, // Space between the buttons vertically
+                              alignment: WrapAlignment.center, // Center the buttons horizontally
+                              children: [
+                                GenerateRecipeButton(
+                                    selectedProducts: selectedProducts,
+                                    onPressed: _generateRecipe),
+                                GenerateRandomRecipeButton(
+                                  onPressed: (List<String> randomSelectedProducts) {
+                                    setState(() {
+                                      selectedProducts = randomSelectedProducts;
+                                    });
+                                    _generateRecipe();
+                                  }),
+                              ],
+                            ),
                           ],
-                        ),
-                      ],
-                      Spacer(),
-                    ],
+                          Spacer(),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
+                  ]),
+               ),
             ),
           ),
           if (isLoading)
