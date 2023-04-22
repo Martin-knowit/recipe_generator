@@ -70,6 +70,7 @@ class _InputScreenState extends State<InputScreen> {
                       SearchBar(
                         typeAheadController: _typeAheadController,
                         addProduct: _addProduct,
+                        selectedProducts: selectedProducts,
                       ),
                       SizedBox(height: 32.0),
                       Row(
@@ -140,8 +141,9 @@ class SelectedProducts extends StatelessWidget {
 class SearchBar extends StatelessWidget {
   final TextEditingController typeAheadController;
   final Function(String) addProduct;
+  final List<String> selectedProducts;
 
-  SearchBar({required this.typeAheadController, required this.addProduct});
+  SearchBar({required this.typeAheadController, required this.addProduct, required this.selectedProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +172,7 @@ class SearchBar extends StatelessWidget {
             return [
               ...foodProducts
                   .where((product) =>
+                      selectedProducts.where((a) => a.toLowerCase() == product.toLowerCase()).isEmpty &&
                       product.toLowerCase().contains(pattern.toLowerCase()))
                   .toList(),
               if (pattern.isNotEmpty) pattern,
