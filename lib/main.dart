@@ -14,13 +14,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Recipe Wizard',
       home: const RecipeGPTApp(),
-      localizationsDelegates:[ 
+      /*localizationsDelegates:[ 
         AppLocalizations.delegate,
       ],
       supportedLocales: [
         Locale('en'), // English
         Locale('sv'), // Swedish
-      ],
+      ],*/
     );
   }
 }
