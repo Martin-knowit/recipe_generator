@@ -7,6 +7,7 @@ class Recipe {
   String cookTime;
   String totalTime;
   int servings;
+  String imageQueryText;
 
   Recipe({
     required this.name,
@@ -17,6 +18,7 @@ class Recipe {
     required this.cookTime,
     required this.totalTime,
     required this.servings,
+    required this.imageQueryText,
   });
 
   factory Recipe.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Recipe {
       cookTime: json['cook_time'],
       totalTime: json['total_time'],
       servings: json['servings'],
+      imageQueryText: json['image_query_text'],
     );
   }
 
@@ -42,6 +45,7 @@ class Recipe {
     data['cook_time'] = this.cookTime;
     data['total_time'] = this.totalTime;
     data['servings'] = this.servings;
+    data['image_query_text'] = this.imageQueryText;
     return data;
   }
 }
