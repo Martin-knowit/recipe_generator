@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:recipe_generator/settings_page.dart';
+import 'package:recipe_generator/settings_screen.dart';
 import 'input_screen.dart';
 
 class RecipeGPTApp extends StatelessWidget {
@@ -80,15 +80,22 @@ class RecipeGPTApp extends StatelessWidget {
                           SizedBox(height: 32.0),
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 500),
-                                pageBuilder: (context, animation,
-                                    secondaryAnimation) => InputScreen(),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  return FadeTransition(
-                                    opacity: animation, child: child,);
-                                },),);
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionDuration:
+                                      Duration(milliseconds: 500),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      InputScreen(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white,
