@@ -205,7 +205,7 @@ class LoadingView extends StatelessWidget {
 
     double maxSize = 500;
 
-    double width = min(screenWidth * 0.5, maxSize);
+    double width = min(screenWidth, maxSize);
     double height = min(screenHeight * 0.5, maxSize);
 
     return Center(
