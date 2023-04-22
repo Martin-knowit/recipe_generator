@@ -42,23 +42,23 @@ class _RecipeWidgetState extends State<RecipeWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Magi skapat!",
-          style: TextStyle(fontSize: 24.0),
-        ),
+        backgroundColor: Color(0x44000000),
+        elevation: 0,
+        title: Text("Ditt personliga recept"),
       ),
       body: Container(
   height: MediaQuery.of(context).size.height,
   decoration: BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Colors.blue.shade100,
-        Colors.blueGrey.shade100,
-      ],
-    ),
+  gradient: LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Colors.grey[200]!,
+      Colors.grey[300]!,
+    ],
   ),
+),
+
   child: Padding(
     padding: const EdgeInsets.all(24.0),
     child: SingleChildScrollView(
@@ -96,7 +96,7 @@ class _RecipeWidgetState extends State<RecipeWidget> {
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0),
-              color: Colors.white,
+              color: Color(0x80FFFFFF),
             ),
             child: Wrap(
               direction: Axis.horizontal,
@@ -215,18 +215,27 @@ class _RecipeWidgetState extends State<RecipeWidget> {
           ),
           SizedBox(height: 8.0),
           ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.recipe.directions.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  child: Text((index + 1).toString()),
-                ),
-                title: Text(widget.recipe.directions[index]),
-              );
-            },
+  shrinkWrap: true,
+  physics: NeverScrollableScrollPhysics(),
+  itemCount: widget.recipe.directions.length,
+  itemBuilder: (BuildContext context, int index) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Colors.grey[800],
+        child: Container(
+          child: Text(
+            (index + 1).toString(),
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
+        ),
+      ),
+      title: Text(widget.recipe.directions[index]),
+    );
+  },
+),
+
         ],
       ), 
     ), 
