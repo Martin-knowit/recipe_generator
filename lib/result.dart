@@ -208,7 +208,7 @@ class _RecipeWidgetState extends State<RecipeWidget> {
 
   void getImageUrl() async {
     final String apiKey = '5UzdEVUJmaUaQ2e9MWcDcb0MM8kfqnSQKG6orhg8pM67PWbKxvgfth1q';
-    final String query = widget.recipe.name;
+    final String query = widget.recipe.imageQueryText;
     final String url = 'https://api.pexels.com/v1/search?query=$query&per_page=1&size=medium&orientation=square&locale=sv-SE';
 
     final response = await http.get(Uri.parse(url), headers: {'Authorization': apiKey});
