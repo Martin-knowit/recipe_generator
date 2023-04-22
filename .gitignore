@@ -51,3 +51,4 @@ google-services.json
 *.hprof
 .flutter-plugins
 .flutter-plugins-dependencies
+*.lock

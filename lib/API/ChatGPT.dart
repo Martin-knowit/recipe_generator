@@ -3,6 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:recipe_generator/API/APIKEY.dart';
 import 'package:recipe_generator/Recipe.dart';
 
+class ApiException implements Exception {
+  final String message;
+  ApiException(this.message);
+}
+
 Future<Recipe> getRecipe(String prompt) async {
   final String url =
       'https://api.openai.com/v1/chat/completions';
@@ -33,8 +38,19 @@ Future<Recipe> getRecipe(String prompt) async {
     body: jsonEncode(data),
   );
 
+  print("Response status: ${response.statusCode}");
+  print("Response body: ${response.body}");
+
+  if (response.statusCode != 200) {
+    final Map<String, dynamic> errorData = json.decode(response.body);
+    throw ApiException(errorData['error']['message']);
+  }
+
   final Map<String, dynamic> responseData = json.decode(response.body);
   final String output = responseData['choices'][0]['message']['content'];
+
+  print('Output content: $output');
+
   final Recipe recipe = Recipe.fromJson(jsonDecode(utf8.decode(output.runes.toList())));
   return recipe;
 }

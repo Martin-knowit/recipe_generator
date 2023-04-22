@@ -1,11 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:recipe_generator/API/ChatGPT.dart';
 import 'ingredients.dart';
 import 'result.dart';
 import 'Recipe.dart';
 import 'dart:math';
+import 'API/ChatGPT.dart';
 
 List<String> randomIngredients(int count) {
   List<String> selectedIngredients = [];
@@ -31,6 +32,7 @@ class InputScreen extends StatefulWidget {
 
 class _InputScreenState extends State<InputScreen> {
   List<String> selectedProducts = [];
+  bool isLoading = false;
 
   final TextEditingController _typeAheadController = TextEditingController();
 
@@ -40,59 +42,70 @@ class _InputScreenState extends State<InputScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/start-background.png',
-              fit: BoxFit.cover,
-            ),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            'assets/start-background.png',
+            fit: BoxFit.cover,
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              color: Colors.black.withOpacity(0.4),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      SelectedProducts(
-                        selectedProducts: selectedProducts,
-                        removeProduct: _removeProduct,
-                      ),
-                      SizedBox(height: 16.0),
-                      SearchBar(
-                        typeAheadController: _typeAheadController,
-                        addProduct: _addProduct,
-                        selectedProducts: selectedProducts,
-                      ),
-                      SizedBox(height: 32.0),
-                      Row(
+        ),
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            color: Colors.black.withOpacity(0.4),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    if (!isLoading)
+                      ...[
+                        SelectedProducts(
+                          selectedProducts: selectedProducts,
+                          removeProduct: _removeProduct,
+                        ),
+                        SizedBox(height: 16.0),
+                        SearchBar(
+                          typeAheadController: _typeAheadController,
+                          addProduct: _addProduct,
+                          selectedProducts: selectedProducts,
+                        ),
+                        SizedBox(height: 32.0),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GenerateRecipeButton(
                               selectedProducts: selectedProducts,
+                              isLoading: isLoading,
+                              onPressed: _generateRecipe,
                             ),
                             SizedBox(width: 8.0),
                             GenerateRandomRecipeButton(),
-                          ]),
-                      Spacer(),
-                    ],
-                  ),
+                          ],
+                        ),
+                      ],
+                    Spacer(),
+                  ],
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        if (isLoading)
+          Center(
+            child: LoadingView(),
+          ),
+      ],
+    ),
+  );
+}
+
 
   void _addProduct(String product) {
     product = product.trim();
@@ -110,6 +123,48 @@ class _InputScreenState extends State<InputScreen> {
     setState(() {
       selectedProducts.remove(product);
     });
+  }
+
+  Future<void> _generateRecipe() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      Recipe recipe = await getRecipe(selectedProducts.join(", "));
+
+      setState(() {
+      isLoading = false;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RecipeWidget(recipe: recipe),
+        ),
+      );
+    } on ApiException catch (e) {
+      print('ApiException: ${e.message}');
+      // Show an appropriate error message to the user
+
+      final snackBar = SnackBar(
+      content: GestureDetector(
+        onTap: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar(); // Dismiss the Snackbar when tapped
+        },
+        child: Text(e.message),
+      ),
+      backgroundColor: Colors.red,
+      duration: Duration(days: 365), // Set a very high value for duration
+      behavior: SnackBarBehavior.floating, // Make the Snackbar float above other UI elements
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+
+      setState(() {
+      isLoading = false;
+    });
+    }
   }
 }
 
@@ -138,12 +193,37 @@ class SelectedProducts extends StatelessWidget {
   }
 }
 
+class LoadingView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double maxSize = 500;
+
+    double width = min(screenWidth * 0.5, maxSize);
+    double height = min(screenHeight * 0.5, maxSize);
+
+    return Center(
+      child: Lottie.asset(
+        'assets/cooking.json', // Replace with the correct path to your animation file
+        width: width,
+        height: height,
+      ),
+    );
+  }
+}
+
 class SearchBar extends StatelessWidget {
   final TextEditingController typeAheadController;
   final Function(String) addProduct;
   final List<String> selectedProducts;
 
-  SearchBar({required this.typeAheadController, required this.addProduct, required this.selectedProducts});
+  SearchBar({
+    required this.typeAheadController,
+    required this.addProduct,
+    required this.selectedProducts,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -195,42 +275,42 @@ class SearchBar extends StatelessWidget {
 
 class GenerateRecipeButton extends StatelessWidget {
   final List<String> selectedProducts;
+  final bool isLoading;
+  final VoidCallback onPressed;
 
-  GenerateRecipeButton({required this.selectedProducts});
+  GenerateRecipeButton({
+    required this.selectedProducts,
+    required this.isLoading,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () async {
-        Recipe recipe = await getRecipe(selectedProducts.join(", "));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecipeWidget(recipe: recipe),
-          ),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: 48.0,
-          vertical: 16.0,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 5.0,
-        animationDuration: Duration(milliseconds: 200),
-        shadowColor: Colors.black.withOpacity(0.5),
-        primary: Colors.blue,
-      ),
-      child: Text(
-        'Generate Recipe',
-        style: TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    return isLoading
+        ? LoadingView()
+        : ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(
+                horizontal: 48.0,
+                vertical: 16.0,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 5.0,
+              animationDuration: Duration(milliseconds: 200),
+              shadowColor: Colors.black.withOpacity(0.5),
+              primary: Colors.blue,
+            ),
+            child: Text(
+              'Generate Recipe',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
   }
 }
 
