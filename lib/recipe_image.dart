@@ -30,7 +30,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        imageUrl = data['photos'][0]['src']['small'];
+        imageUrl = data['photos'][0]['src']['medium'];
       });
     } else {
       print('Request failed with status: ${response.statusCode}.');
