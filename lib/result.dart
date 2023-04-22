@@ -43,182 +43,196 @@ class _RecipeWidgetState extends State<RecipeWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.recipe.name,
+          "Magi skapat!",
           style: TextStyle(fontSize: 24.0),
         ),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade100,
-              Colors.blueGrey.shade100,
-            ],
+  height: MediaQuery.of(context).size.height,
+  decoration: BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Colors.blue.shade100,
+        Colors.blueGrey.shade100,
+      ],
+    ),
+  ),
+  child: Padding(
+    padding: const EdgeInsets.all(24.0),
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 200.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          SizedBox(height: 16.0),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.spaceBetween,
               children: [
-                 Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    color: Colors.white,
-                  ),
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Prepp-tid',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  Text(widget.recipe.prepTime),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tillagningstid',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  Text(widget.recipe.cookTime),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Total tid',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  Text(widget.recipe.totalTime),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Portioner',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.0),
-                                  Text(widget.recipe.servings.toString()),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16.0),
                 Text(
-                  widget.recipe.description,
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  'Ingredienser:',
+                  widget.recipe.name,
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                SizedBox(height: 8.0),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: widget.recipe.ingredients.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: 8.0);
-                  },
-                  itemBuilder: (BuildContext context, int index) {
-                    return Text(widget.recipe.ingredients[index]);
-                  },
-                ),
-                SizedBox(height: 16.0),
-                Text(
-                  'Instruktioner:',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: widget.recipe.directions.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        child: Text((index + 1).toString()),
-                      ),
-                      title: Text(widget.recipe.directions[index]),
-                    );
-                  },
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
+          SizedBox(height: 16.0),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16.0),
+              color: Colors.white,
+            ),
+            child: Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 8.0, // adjust the spacing between the children
+              runSpacing: 8.0, // adjust the spacing between the rows
+              runAlignment: WrapAlignment.center, // center the wrapped rows vertically
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Prepp-tid',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(widget.recipe.prepTime),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tillagningstid',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(widget.recipe.cookTime),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Total tid',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(widget.recipe.totalTime),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Portioner',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(widget.recipe.servings.toString()),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.0),
+          Text(
+            widget.recipe.description,
+            style: TextStyle(fontSize: 18.0),
+          ),
+          SizedBox(height: 16.0),
+          Text(
+            'Ingredienser:',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: widget.recipe.ingredients.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(height: 8.0);
+            },
+            itemBuilder: (BuildContext context, int index) {
+              return Text(widget.recipe.ingredients[index]);
+            },
+          ),
+          SizedBox(height: 16.0),
+          Text(
+            'Instruktioner:',
+            style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: widget.recipe.directions.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text((index + 1).toString()),
+                ),
+                title: Text(widget.recipe.directions[index]),
+              );
+            },
+          ),
+        ],
+      ), 
+    ), 
+  ), 
+  ), 
+  );
   }
 
   void getImageUrl() async {
