@@ -5,7 +5,7 @@
   "start": "Start",
   "ingredient_search": "Search or add food products",
   "generate_recipe": "Generate Recipe",
-  "random_recipe": "Random Recipe",
+  "random_recipe": "Surprise me!",
   "settings": "Settings",
   "api_key": "API Key",
   "api_key_hint": "Enter your API key",

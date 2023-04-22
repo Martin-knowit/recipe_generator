@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:recipe_generator/API/APIKEY.dart';
+import 'package:recipe_generator/globals.dart';
 import 'package:recipe_generator/Recipe.dart';
 
 class ApiException implements Exception {
@@ -16,7 +17,7 @@ Future<Recipe> getRecipe(String prompt) async {
   final int temperature = 0;
 
   if(prompt.isEmpty){
-    throw Exception("Missing selected Ingredients");
+    throw ApiException("No selected ingredients");
   }
 
   final Map<String, dynamic> data = {
@@ -25,9 +26,9 @@ Future<Recipe> getRecipe(String prompt) async {
       {
         'role': "assistant",
         'content':
-            'You are a Chef who provides recipes based on ingredients, You only provide the recipe in swedish and metric'
+            'You are a Chef who provides recipes based on ingredients, You only provide the recipe in '+selectedLanguage+' and metric'
       },
-      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text":String }'}
+      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text in '+selectedLanguage+'. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text":String in english }'}
     ],
     'max_tokens': maxTokens,
     'temperature': temperature

@@ -1,1 +1,1 @@
-String selectedLanguage = 'English';
+String selectedLanguage = 'Swedish';

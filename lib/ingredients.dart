@@ -1,4 +1,4 @@
-final List<String> foodProducts = [
+final Map<String, List<String>> foodProducts = {"English":[
   "Salt",
   "Pepper",
   "Olive Oil",
@@ -214,9 +214,7 @@ final List<String> foodProducts = [
   "Yams",
   "Yellow squash",
   "Zucchini"
-];
-
-final List<String> foodProductsSv = [
+], "Swedish": [
   "Salt",
   "Peppar",
   "Olivolja",
@@ -432,4 +430,4 @@ final List<String> foodProductsSv = [
   "Yams",
   "Gul squash",
   "Zucchini"
-];
+]};

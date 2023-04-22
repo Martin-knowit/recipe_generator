@@ -7,14 +7,16 @@ import 'result.dart';
 import 'Recipe.dart';
 import 'dart:math';
 import 'API/ChatGPT.dart';
+import 'globals.dart';
 
 List<String> randomIngredients(int count) {
   List<String> selectedIngredients = [];
   Random random = Random();
 
   // Pick random ingredients from the array
-  while (selectedIngredients.length < count) {
-    String ingredient = foodProducts[random.nextInt(foodProducts.length)];
+  List<String>? selectedIngredientsList = foodProducts[selectedLanguage];
+  while (selectedIngredients.length < count && selectedIngredientsList != null) {
+    String ingredient = selectedIngredientsList[random.nextInt(selectedIngredientsList.length)];
     if (!selectedIngredients.contains(ingredient)) {
       selectedIngredients.add(ingredient);
     }
@@ -168,6 +170,10 @@ class _InputScreenState extends State<InputScreen> {
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
@@ -253,7 +259,7 @@ class SearchBar extends StatelessWidget {
           textFieldConfiguration: TextFieldConfiguration(
             controller: typeAheadController,
             decoration: InputDecoration(
-              labelText: 'Search or add food products',
+              labelText: 'Sök eller lägg till livsmedel',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50),
                 borderSide: BorderSide.none,
@@ -267,7 +273,7 @@ class SearchBar extends StatelessWidget {
           ),
           suggestionsCallback: (pattern) {
             return [
-              ...foodProducts
+              ...(foodProducts[selectedLanguage]??[])
                   .where((product) =>
                       selectedProducts
                           .where(
@@ -320,7 +326,7 @@ class GenerateRecipeButton extends StatelessWidget {
         primary: Colors.blue,
       ),
       child: Text(
-        'Generate Recipe',
+        'Generera recept',
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
@@ -359,7 +365,7 @@ class GenerateRandomRecipeButton extends StatelessWidget {
         primary: Colors.blue,
       ),
       child: Text(
-        'Surprise me!',
+        'Överraska mig!',
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
