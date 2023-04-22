@@ -76,13 +76,14 @@ class _InputScreenState extends State<InputScreen> {
                           selectedProducts: selectedProducts,
                         ),
                         SizedBox(height: 32.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Wrap(
+                          spacing: 8.0, // Space between the buttons horizontally
+                          runSpacing: 8.0, // Space between the buttons vertically
+                          alignment: WrapAlignment.center, // Center the buttons horizontally
                           children: [
                             GenerateRecipeButton(
                                 selectedProducts: selectedProducts,
                                 onPressed: _generateRecipe),
-                            SizedBox(width: 8.0),
                             GenerateRandomRecipeButton(
                               onPressed: (List<String> randomSelectedProducts) {
                                 setState(() {
@@ -208,10 +209,23 @@ class LoadingView extends StatelessWidget {
     double height = min(screenHeight * 0.5, maxSize);
 
     return Center(
-      child: Lottie.asset(
-        'assets/cooking.json', // Replace with the correct path to your animation file
-        width: width,
-        height: height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset(
+            'assets/cooking.json', // Replace with the correct path to your animation file
+            width: width,
+            height: height,
+          ),
+          Text(
+            'Skapar matmagi...',
+            style: TextStyle(
+              fontSize: Theme.of(context).textTheme.headline4?.fontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
