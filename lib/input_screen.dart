@@ -42,30 +42,29 @@ class _InputScreenState extends State<InputScreen> {
     super.dispose();
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset(
-            'assets/start-background.png',
-            fit: BoxFit.cover,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/start-background.png',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            color: Colors.black.withOpacity(0.4),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Spacer(),
-                    if (!isLoading)
-                      ...[
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              color: Colors.black.withOpacity(0.4),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Spacer(),
+                      if (!isLoading) ...[
                         SelectedProducts(
                           selectedProducts: selectedProducts,
                           removeProduct: _removeProduct,
@@ -81,31 +80,34 @@ Widget build(BuildContext context) {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GenerateRecipeButton(
-                              selectedProducts: selectedProducts,
-                              isLoading: isLoading,
-                              onPressed: _generateRecipe,
-                            ),
+                                selectedProducts: selectedProducts,
+                                onPressed: _generateRecipe),
                             SizedBox(width: 8.0),
-                            GenerateRandomRecipeButton(),
+                            GenerateRandomRecipeButton(
+                              onPressed: (List<String> randomSelectedProducts) {
+                                setState(() {
+                                  selectedProducts = randomSelectedProducts;
+                                });
+                                _generateRecipe();
+                              }),
                           ],
                         ),
                       ],
-                    Spacer(),
-                  ],
+                      Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        if (isLoading)
-          Center(
-            child: LoadingView(),
-          ),
-      ],
-    ),
-  );
-}
-
+          if (isLoading)
+            Center(
+              child: LoadingView(),
+            ),
+        ],
+      ),
+    );
+  }
 
   void _addProduct(String product) {
     product = product.trim();
@@ -134,7 +136,7 @@ Widget build(BuildContext context) {
       Recipe recipe = await getRecipe(selectedProducts.join(", "));
 
       setState(() {
-      isLoading = false;
+        isLoading = false;
       });
 
       Navigator.push(
@@ -148,22 +150,23 @@ Widget build(BuildContext context) {
       // Show an appropriate error message to the user
 
       final snackBar = SnackBar(
-      content: GestureDetector(
-        onTap: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar(); // Dismiss the Snackbar when tapped
-        },
-        child: Text(e.message),
-      ),
-      backgroundColor: Colors.red,
-      duration: Duration(days: 365), // Set a very high value for duration
-      behavior: SnackBarBehavior.floating, // Make the Snackbar float above other UI elements
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+        content: GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(context)
+                .hideCurrentSnackBar(); // Dismiss the Snackbar when tapped
+          },
+          child: Text(e.message),
+        ),
+        backgroundColor: Colors.red,
+        duration: Duration(days: 365), // Set a very high value for duration
+        behavior: SnackBarBehavior
+            .floating, // Make the Snackbar float above other UI elements
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
       setState(() {
-      isLoading = false;
-    });
+        isLoading = false;
+      });
     }
   }
 }
@@ -252,7 +255,10 @@ class SearchBar extends StatelessWidget {
             return [
               ...foodProducts
                   .where((product) =>
-                      selectedProducts.where((a) => a.toLowerCase() == product.toLowerCase()).isEmpty &&
+                      selectedProducts
+                          .where(
+                              (a) => a.toLowerCase() == product.toLowerCase())
+                          .isEmpty &&
                       product.toLowerCase().contains(pattern.toLowerCase()))
                   .toList(),
               if (pattern.isNotEmpty) pattern,
@@ -275,59 +281,55 @@ class SearchBar extends StatelessWidget {
 
 class GenerateRecipeButton extends StatelessWidget {
   final List<String> selectedProducts;
-  final bool isLoading;
   final VoidCallback onPressed;
 
   GenerateRecipeButton({
     required this.selectedProducts,
-    required this.isLoading,
     required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? LoadingView()
-        : ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(
-                horizontal: 48.0,
-                vertical: 16.0,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 5.0,
-              animationDuration: Duration(milliseconds: 200),
-              shadowColor: Colors.black.withOpacity(0.5),
-              primary: Colors.blue,
-            ),
-            child: Text(
-              'Generate Recipe',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          );
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(
+          horizontal: 48.0,
+          vertical: 16.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5.0,
+        animationDuration: Duration(milliseconds: 200),
+        shadowColor: Colors.black.withOpacity(0.5),
+        primary: Colors.blue,
+      ),
+      child: Text(
+        'Generate Recipe',
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 }
 
 class GenerateRandomRecipeButton extends StatelessWidget {
+  final Function(List<String>) onPressed;
+
+  GenerateRandomRecipeButton({
+    required this.onPressed,
+  });
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () async {
+      onPressed: () {
         // Generate random ingredients using the randomIngredients() function
         List<String> ingredients = randomIngredients(8);
-        Recipe recipe = await getRecipe(ingredients.join(", "));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecipeWidget(recipe: recipe),
-          ),
-        );
+        onPressed(ingredients);
       },
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(
@@ -343,7 +345,7 @@ class GenerateRandomRecipeButton extends StatelessWidget {
         primary: Colors.blue,
       ),
       child: Text(
-        'Random Recipe',
+        'Surprise me!',
         style: TextStyle(
           fontSize: 24.0,
           fontWeight: FontWeight.bold,
