@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:share_plus/share_plus.dart';
 import 'Recipe.dart';
 import 'package:http/http.dart' as http;
 
@@ -240,9 +241,43 @@ class _RecipeWidgetState extends State<RecipeWidget> {
       ), 
     ), 
   ), 
-  ), 
-  );
+  ),
+  floatingActionButton: FloatingActionButton(
+    onPressed: () {
+      final text = recipeToString(widget.recipe);
+      Share.share('${text}');
+    },
+    backgroundColor: Colors.green[200], // set background color to mellow green
+    child: Icon(Icons.share),
+),
+
+); 
   }
+
+  String recipeToString(Recipe recipe) {
+  final StringBuffer buffer = StringBuffer();
+  buffer.writeln("Jag har precis skapat ett helt AI-genererat recept med Recipe Wizard!");
+  buffer.writeln("");
+  buffer.writeln('${recipe.name}');
+  buffer.writeln('${recipe.description}');
+  buffer.writeln("");
+  buffer.writeln('Ingredienser:');
+  for (final ingredient in recipe.ingredients) {
+    buffer.writeln('- $ingredient');
+  }
+  buffer.writeln("");
+  buffer.writeln('Anvisningar:');
+  for (int i = 0; i < recipe.directions.length; i++) {
+    buffer.writeln('${i + 1}. ${recipe.directions[i]}');
+  }
+  buffer.writeln("");
+  buffer.writeln('Prepp-tid: ${recipe.prepTime}');
+  buffer.writeln('Tillagningstid: ${recipe.cookTime}');
+  buffer.writeln('Total tid: ${recipe.totalTime}');
+  buffer.writeln('Portioner: ${recipe.servings}');
+  return buffer.toString();
+}
+
 
   void getImageUrl() async {
     final String apiKey = '5UzdEVUJmaUaQ2e9MWcDcb0MM8kfqnSQKG6orhg8pM67PWbKxvgfth1q';
