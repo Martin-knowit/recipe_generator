@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "app_name": "Recipe Wizard",
+  "slogan": "Your guide to a culinary masterpiece. Sort of.",
+  "start": "Start",
+  "ingredient_search": "Search or add food products",
+  "generate_recipe": "Generate Recipe",
+  "random_recipe": "Random Recipe",
+  "settings": "Settings",
+  "api_key": "API Key",
+  "api_key_hint": "Enter your API key",
+  "save_settings": "Save Settings"
+}

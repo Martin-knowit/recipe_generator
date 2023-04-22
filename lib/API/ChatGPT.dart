@@ -15,6 +15,10 @@ Future<Recipe> getRecipe(String prompt) async {
   final int maxTokens = 1024;
   final int temperature = 0;
 
+  if(prompt.isEmpty){
+    throw Exception("Missing selected Ingredients");
+  }
+
   final Map<String, dynamic> data = {
     'model': model,
     'messages': [
@@ -23,7 +27,7 @@ Future<Recipe> getRecipe(String prompt) async {
         'content':
             'You are a Chef who provides recipes based on ingredients, You only provide the recipe in swedish and metric'
       },
-      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int }'}
+      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text":String }'}
     ],
     'max_tokens': maxTokens,
     'temperature': temperature
@@ -45,12 +49,13 @@ Future<Recipe> getRecipe(String prompt) async {
     final Map<String, dynamic> errorData = json.decode(response.body);
     throw ApiException(errorData['error']['message']);
   }
-
-  final Map<String, dynamic> responseData = json.decode(response.body);
-  final String output = responseData['choices'][0]['message']['content'];
-
-  print('Output content: $output');
-
-  final Recipe recipe = Recipe.fromJson(jsonDecode(utf8.decode(output.runes.toList())));
-  return recipe;
+  
+  try{
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    final String output = responseData['choices'][0]['message']['content'];
+    final Recipe recipe = Recipe.fromJson(jsonDecode(utf8.decode(output.runes.toList())));
+    return recipe;
+  }catch(e){
+    throw Exception(e);
+  }
 }

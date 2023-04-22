@@ -1,0 +1,13 @@
+{
+  "@@locale": "sv",
+  "app_name": "Recipe Wizard",
+  "slogan": "Din guide till ett kulinariskt mästerverk. Typ.",
+  "start": "Starta",
+  "ingredient_search": "Sök eller lägg till livsmedel",
+  "generate_recipe": "Generera recept",
+  "random_recipe": "Slumpa recept",
+  "settings": "Inställningar",
+  "api_key": "API-nyckel",
+  "api_key_hint": "Ange din API-nyckel",
+  "save_settings": "Spara inställningar"
+}

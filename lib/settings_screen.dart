@@ -66,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               dropdownColor: Colors.white,
               items: <String>[
-                'Svenska',
+                'Swedish',
                 'English',
                 'Spanish',
                 'French',
