@@ -72,7 +72,8 @@ class _InputScreenState extends State<InputScreen> {
   }
 
   void _addProduct(String product) {
-    if (!selectedProducts.contains(product)) {
+    product = product.trim();
+    if (selectedProducts.where((a) => a.toLowerCase() == product.toLowerCase()).isEmpty && product.isNotEmpty) {
       setState(() {
         selectedProducts.add(product);
       });
