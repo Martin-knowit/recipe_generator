@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Recipe GPT App',
+      title: 'Recipe Wizard',
       home: const RecipeGPTApp(),
     );
   }
