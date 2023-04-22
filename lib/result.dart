@@ -81,70 +81,85 @@ class _RecipeWidgetState extends State<RecipeWidget> {
                     borderRadius: BorderRadius.circular(16.0),
                     color: Colors.white,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    alignment: WrapAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
                           children: [
-                            Text(
-                              'Prep Time',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Prepp-tid',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(widget.recipe.prepTime),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 4.0),
-                            Text(widget.recipe.prepTime),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tillagningstid',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(widget.recipe.cookTime),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
                           children: [
-                            Text(
-                              'Cook Time',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Total tid',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(widget.recipe.totalTime),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 4.0),
-                            Text(widget.recipe.cookTime),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Total Time',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Portioner',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.0),
+                                  Text(widget.recipe.servings.toString()),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 4.0),
-                            Text(widget.recipe.totalTime),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Servings',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4.0),
-                            Text(widget.recipe.servings.toString()),
                           ],
                         ),
                       ),
@@ -158,7 +173,7 @@ class _RecipeWidgetState extends State<RecipeWidget> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Ingredients:',
+                  'Ingredienser:',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -178,7 +193,7 @@ class _RecipeWidgetState extends State<RecipeWidget> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  'Instructions:',
+                  'Instruktioner:',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
