@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_generator/API/APIKEY.dart';
+import 'package:recipe_generator/globals.dart';
+
+String _selectedLanguage = 'English';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -9,7 +12,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _apiKeyController = TextEditingController(text:API_KEY);
+  final _apiKeyController = TextEditingController(text: API_KEY);
 
   @override
   void dispose() {
@@ -18,9 +21,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _saveSettings() {
-    // Save the API key and perform any necessary operations.
+    // Save the API key and selected language and perform any necessary operations.
     String apiKey = _apiKeyController.text;
     API_KEY = apiKey;
+    selectedLanguage = _selectedLanguage;
   }
 
   @override
@@ -46,8 +50,27 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: _apiKeyController,
               decoration: InputDecoration(
                 hintText: 'Enter your API key',
-                
               ),
+            ),
+            DropdownButton<String>(
+              value: _selectedLanguage,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedLanguage = newValue!;
+                });
+              },
+              items: <String>[
+                'English',
+                'Spanish',
+                'French',
+                'German',
+                'Italian'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
             SizedBox(height: 16),
             ElevatedButton(
