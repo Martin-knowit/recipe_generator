@@ -13,6 +13,8 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final _apiKeyController = TextEditingController(text: "API_KEY");
+  double _gptMaxToken = 1024;
+  List<double> _sliderValues = [256, 512, 1024, 2048, 4096];
   
   @override
   void dispose() {
@@ -28,9 +30,16 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? myValue = prefs.getString('api_key');
+
     if (myValue != null) {
       setState(() {
         _apiKeyController.text = myValue;
+      });
+    }
+    double? gptMaxToken = prefs.getDouble('gpt_max_token');
+    if (gptMaxToken != null) {
+      setState(() {
+        _gptMaxToken = gptMaxToken;
       });
     }
   }
@@ -40,6 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
     String apiKey = _apiKeyController.text;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('api_key', apiKey);
+    prefs.setDouble('gpt_max_token', _gptMaxToken);
     selectedLanguage = _selectedLanguage;
   }
 
@@ -80,6 +90,45 @@ class _SettingsPageState extends State<SettingsPage> {
                     hintText: 'Enter your API key',
                   ),
                 ),
+                SizedBox(height: 16),
+                Text(
+                  'ChatGPT maxToken',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    thumbColor: Colors.blue,
+                    activeTrackColor: Colors.blue,
+                    inactiveTrackColor: Colors.grey,
+                    overlayColor: Colors.blue.withAlpha(32),
+                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                    overlayShape: RoundSliderOverlayShape(overlayRadius: 24.0),
+                  ),
+                  child: Slider(
+                    value: _gptMaxToken,
+                    min: _sliderValues.first,
+                    max: _sliderValues.last,  
+                    semanticFormatterCallback: (double value) =>
+                        _sliderValues.contains(value) ? value.round().toString(): ""
+                    ,
+                    divisions: _sliderValues.length - 1,
+                    label: _gptMaxToken.round().toString(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _gptMaxToken = newValue;
+                      });
+                    },
+                  ),
+                ),
+                if (_gptMaxToken <= 512)
+                  Text(
+                    'Varning: För lågt värde kan leda till att förfrågan misslyckas.',
+                    style: TextStyle(color: Colors.red),
+                  ),
                 DropdownButton<String>(
                   borderRadius: BorderRadius.circular(12.0),
                   value: _selectedLanguage,

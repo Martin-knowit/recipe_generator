@@ -12,10 +12,10 @@ class ApiException implements Exception {
 Future<Recipe> getRecipe(String prompt) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? api_key = prefs.getString('api_key');
+  double gpt_max_token = prefs.getDouble('gpt_max_token')??1024;
   final String url =
       'https://api.openai.com/v1/chat/completions';
   final String model = 'gpt-3.5-turbo';
-  final int maxTokens = 1024;
   final int temperature = 0;
 
   if(prompt.isEmpty){
@@ -35,7 +35,7 @@ Future<Recipe> getRecipe(String prompt) async {
       },
       {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text in '+selectedLanguage+'. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String not numbered], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text": three image search query words for the dish }'}
     ],
-    'max_tokens': maxTokens,
+    'max_tokens': gpt_max_token.toString(),
     'temperature': temperature
   };
 
