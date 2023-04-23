@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_generator/API/APIKEY.dart';
 import 'package:recipe_generator/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,12 +12,27 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final _apiKeyController = TextEditingController(text: API_KEY);
-
+  final _apiKeyController = TextEditingController(text: "API_KEY");
+  
   @override
   void dispose() {
     _apiKeyController.dispose();
     super.dispose();
+  }
+
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? myValue = prefs.getString('api_key');
+    if (myValue != null) {
+      setState(() {
+        _apiKeyController.text = myValue;
+      });
+    }
   }
 
   void _saveSettings() async {
@@ -26,7 +40,6 @@ class _SettingsPageState extends State<SettingsPage> {
     String apiKey = _apiKeyController.text;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('api_key', apiKey);
-    API_KEY = apiKey;
     selectedLanguage = _selectedLanguage;
   }
 

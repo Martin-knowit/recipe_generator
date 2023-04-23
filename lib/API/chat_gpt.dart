@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:recipe_generator/API/APIKEY.dart';
 import 'package:recipe_generator/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:recipe_generator/Recipe.dart';
 
 class ApiException implements Exception {
@@ -10,6 +10,8 @@ class ApiException implements Exception {
 }
 
 Future<Recipe> getRecipe(String prompt) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? api_key = prefs.getString('api_key');
   final String url =
       'https://api.openai.com/v1/chat/completions';
   final String model = 'gpt-3.5-turbo';
@@ -18,6 +20,9 @@ Future<Recipe> getRecipe(String prompt) async {
 
   if(prompt.isEmpty){
     throw ApiException("Du måste välja ingredienser först");
+  }
+  if(api_key == null){
+    throw ApiException("Du har inte fyllt i en API nyckel");
   }
 
   final Map<String, dynamic> data = {
@@ -38,7 +43,7 @@ Future<Recipe> getRecipe(String prompt) async {
     Uri.parse(url),
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + API_KEY
+      'Authorization': 'Bearer ' + api_key
     },
     body: jsonEncode(data),
   );

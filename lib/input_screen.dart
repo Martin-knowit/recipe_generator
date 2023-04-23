@@ -7,7 +7,7 @@ import 'ingredients.dart';
 import 'result.dart';
 import 'Recipe.dart';
 import 'dart:math';
-import 'API/ChatGPT.dart';
+import 'API/chat_gpt.dart';
 import 'globals.dart';
 
 List<String> randomIngredients(int count) {
