@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_generator/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
 
 String _selectedLanguage = 'Swedish';
 
@@ -53,25 +55,26 @@ class _SettingsPageState extends State<SettingsPage> {
     selectedLanguage = _selectedLanguage;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: SharedPreferences.getInstance(),
-      builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
-        if (!snapshot.hasData) {
-          return CircularProgressIndicator();
-        }
+@override
+Widget build(BuildContext context) {
+  return FutureBuilder(
+    future: SharedPreferences.getInstance(),
+    builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
+      if (!snapshot.hasData) {
+        return CircularProgressIndicator();
+      }
 
-        SharedPreferences prefs = snapshot.data!;
-        String apiKey = prefs.getString('api_key') ?? '';
+      SharedPreferences prefs = snapshot.data!;
+      String apiKey = prefs.getString('api_key') ?? '';
 
-        _apiKeyController.text = apiKey;
+      _apiKeyController.text = apiKey;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Settings'),
-          ),
-          body: Padding(
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Settings'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,10 +114,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Slider(
                     value: _gptMaxToken,
                     min: _sliderValues.first,
-                    max: _sliderValues.last,  
-                    semanticFormatterCallback: (double value) =>
-                        _sliderValues.contains(value) ? value.round().toString(): ""
-                    ,
+                    max: _sliderValues.last,
+                    semanticFormatterCallback: (double value) => _sliderValues.contains(value)
+                        ? value.round().toString()
+                        : "",
                     divisions: _sliderValues.length - 1,
                     label: _gptMaxToken.round().toString(),
                     onChanged: (newValue) {
@@ -165,13 +168,79 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _saveSettings,
-                  child: Text('Save Settings'),
+                  child: Text('Spara inställningar'),
                 ),
+                SizedBox(height: 16),
+                OnboardingInformationView(),
               ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
 }
+}
+
+
+Widget OnboardingInformationView() {
+  return Container(
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Välkommen till Recipe Generator!',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          'För att använda appen behöver du ha en API-nyckel från OpenAI. Följ dessa steg för att komma igång:',
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 16),
+        RichText(
+          text: TextSpan(
+            text: '1. Besök ',
+            style: TextStyle(fontSize: 16, color: Colors.black),
+            children: [
+              TextSpan(
+                text: 'OpenAI:s hemsida',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => launch('https://openai.com/product'),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 8),
+        Text(
+          '2. Lägg till en betalningsmetod. Det är mycket billigt att använda. 100 recept kostar ca 4 SEK.',
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 8),
+        Text(
+          '3. Kopiera din API-nyckel.',
+          style: TextStyle(fontSize: 16),
+        ),
+        SizedBox(height: 8),
+        Text(
+          '4. Klistra in din API-nyckel i rutan ovanför.',
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    ),
+  );
+}
+
