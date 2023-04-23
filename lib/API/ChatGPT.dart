@@ -28,7 +28,7 @@ Future<Recipe> getRecipe(String prompt) async {
         'content':
             'You are a Chef who provides recipes based on ingredients, You only provide the recipe in '+selectedLanguage+' and metric'
       },
-      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text in '+selectedLanguage+'. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String not numbered], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text": two comma based image search query words for dish }'}
+      {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text in '+selectedLanguage+'. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String not numbered], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text": three image search query words for the dish }'}
     ],
     'max_tokens': maxTokens,
     'temperature': temperature
