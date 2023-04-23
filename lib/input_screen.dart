@@ -150,52 +150,66 @@ class _InputScreenState extends State<InputScreen> {
   }
 
   Future<void> _generateRecipe() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  try {
+    Recipe recipe = await getRecipe(selectedProducts.join(", "));
+
     setState(() {
-      isLoading = true;
+      isLoading = false;
     });
 
-    try {
-      Recipe recipe = await getRecipe(selectedProducts.join(", "));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecipeWidget(recipe: recipe),
+      ),
+    );
+  } on ApiException catch (e) {
+    print('Error: $e');
+    // Show an appropriate error message to the user
 
-      setState(() {
-        isLoading = false;
-      });
+    final errorSnackbar = ErrorSnackbar(e.message, context: context);
+    final snackBar = errorSnackbar.toSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RecipeWidget(recipe: recipe),
-        ),
-      );
-    } on ApiException catch (e) {
-      print('ApiException: ${e.message}');
-      // Show an appropriate error message to the user
-
-      final snackBar = SnackBar(
-        content: GestureDetector(
-          onTap: () {
-            ScaffoldMessenger.of(context)
-                .hideCurrentSnackBar(); // Dismiss the Snackbar when tapped
-          },
-          child: Text(e.message),
-        ),
-        backgroundColor: Colors.red,
-        duration: Duration(days: 365), // Set a very high value for duration
-        behavior: SnackBarBehavior
-            .floating, // Make the Snackbar float above other UI elements
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-      setState(() {
+    setState(() {
         isLoading = false;
       });
     } catch (e) {
+      final errorSnackbar = ErrorSnackbar("Något gick fel. Försök igen.", context: context);
+      final snackBar = errorSnackbar.toSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       setState(() {
         isLoading = false;
       });
     }
   }
 }
+
+class ErrorSnackbar {
+  final String message;
+  final BuildContext context; // add a BuildContext property
+
+  ErrorSnackbar(this.message, {required this.context});
+
+  SnackBar toSnackBar() {
+    return SnackBar(
+      content: GestureDetector(
+        onTap: () {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        },
+        child: Text(message),
+      ),
+      backgroundColor: Colors.red,
+      duration: Duration(days: 365),
+      behavior: SnackBarBehavior.floating,
+    );
+  }
+}
+
 
 class SelectedProducts extends StatelessWidget {
   final List<String> selectedProducts;
