@@ -35,7 +35,7 @@ Future<Recipe> getRecipe(String prompt) async {
       },
       {'role': "user", 'content': 'ingredients: '+ prompt + ' return only the JSON no other text in '+selectedLanguage+'. Format for response json format { "name": String, "description": String, "ingredients": [String], "directions": [String not numbered], "prep_time": String, "cook_time": String, "total_time": String, "servings": Int, "image_query_text": three image search query words for the dish }'}
     ],
-    'max_tokens': gpt_max_token.toString(),
+    'max_tokens': gpt_max_token.toInt(),
     'temperature': temperature
   };
 
