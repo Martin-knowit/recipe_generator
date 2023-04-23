@@ -16,7 +16,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final _apiKeyController = TextEditingController(text: "API_KEY");
   double _gptMaxToken = 1024;
-  List<double> _sliderValues = [256, 512, 1024, 2048, 4096];
+  final List<double> _sliderValues = [256.0, 512.0, 768.0, 1024.0, 1280.0, 1536.0, 1792.0, 2048.0, 2304.0, 2560.0, 2816.0, 3072.0, 3328.0, 3584.0, 3840.0, 4096.0];
+
   
   @override
   void dispose() {
@@ -33,17 +34,9 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? myValue = prefs.getString('api_key');
 
-    if (myValue != null) {
-      setState(() {
-        _apiKeyController.text = myValue;
-      });
-    }
+    _apiKeyController.text = myValue ?? '';
     double? gptMaxToken = prefs.getDouble('gpt_max_token');
-    if (gptMaxToken != null) {
-      setState(() {
-        _gptMaxToken = gptMaxToken;
-      });
-    }
+    _gptMaxToken = gptMaxToken ?? 1024;
   }
 
   void _saveSettings() async {
@@ -55,131 +48,128 @@ class _SettingsPageState extends State<SettingsPage> {
     selectedLanguage = _selectedLanguage;
   }
 
-@override
-Widget build(BuildContext context) {
-  return FutureBuilder(
-    future: SharedPreferences.getInstance(),
-    builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
-      if (!snapshot.hasData) {
-        return CircularProgressIndicator();
-      }
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: SharedPreferences.getInstance(),
+      builder: (context, AsyncSnapshot<SharedPreferences> snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        }
 
-      SharedPreferences prefs = snapshot.data!;
-      String apiKey = prefs.getString('api_key') ?? '';
+        SharedPreferences prefs = snapshot.data!;
+        String apiKey = prefs.getString('api_key') ?? '';
 
-      _apiKeyController.text = apiKey;
+        _apiKeyController.text = apiKey;
 
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Settings'),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'API Key',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Inställningar'),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'API-nyckel',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                TextField(
-                  controller: _apiKeyController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your API key',
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: _apiKeyController,
+                    decoration: InputDecoration(
+                      hintText: 'Ange din API-nyckel',
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'ChatGPT maxToken',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                  SizedBox(height: 16),
+                  Text(
+                    'Max antal tokens att använda mot Chat GPT',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                SizedBox(height: 8),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    thumbColor: Colors.blue,
-                    activeTrackColor: Colors.blue,
-                    inactiveTrackColor: Colors.grey,
-                    overlayColor: Colors.blue.withAlpha(32),
-                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                    overlayShape: RoundSliderOverlayShape(overlayRadius: 24.0),
+                  SizedBox(height: 8),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      thumbColor: Colors.blue,
+                      activeTrackColor: Colors.blue,
+                      inactiveTrackColor: Colors.grey,
+                      overlayColor: Colors.blue.withAlpha(32),
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 24.0),
+                    ),
+                    child: Slider(
+                      value: _sliderValues.indexOf(_gptMaxToken.toDouble()).toDouble(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _gptMaxToken = _sliderValues[newValue.round()].toDouble();
+                        });
+                      },
+                      min: 0,
+                      max: _sliderValues.length - 1,
+                      divisions: _sliderValues.length - 1,
+                      label: _sliderValues[_sliderValues.indexOf(_gptMaxToken.toDouble())].toString(),
+                    ),
                   ),
-                  child: Slider(
-                    value: _gptMaxToken,
-                    min: _sliderValues.first,
-                    max: _sliderValues.last,
-                    semanticFormatterCallback: (double value) => _sliderValues.contains(value)
-                        ? value.round().toString()
-                        : "",
-                    divisions: _sliderValues.length - 1,
-                    label: _gptMaxToken.round().toString(),
-                    onChanged: (newValue) {
+                  if (_gptMaxToken <= 512)
+                    Text(
+                      'Varning: För lågt värde kan leda till att förfrågan misslyckas.',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  DropdownButton<String>(
+                    borderRadius: BorderRadius.circular(12.0),
+                    value: _selectedLanguage,
+                    onChanged: (String? newValue) {
                       setState(() {
-                        _gptMaxToken = newValue;
+                        _selectedLanguage = newValue!;
                       });
                     },
-                  ),
-                ),
-                if (_gptMaxToken <= 512)
-                  Text(
-                    'Varning: För lågt värde kan leda till att förfrågan misslyckas.',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                DropdownButton<String>(
-                  borderRadius: BorderRadius.circular(12.0),
-                  value: _selectedLanguage,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedLanguage = newValue!;
-                    });
-                  },
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                  dropdownColor: Colors.white,
-                  items: <String>[
-                    'Swedish',
-                    'English',
-                    'Spanish',
-                    'French',
-                    'German',
-                    'Italian'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    dropdownColor: Colors.white,
+                    items: <String>[
+                      'Swedish',
+                      'English',
+                      'Spanish',
+                      'French',
+                      'German',
+                      'Italian'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _saveSettings,
-                  child: Text('Spara inställningar'),
-                ),
-                SizedBox(height: 16),
-                OnboardingInformationView(),
-              ],
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _saveSettings,
+                    child: Text('Spara inställningar'),
+                  ),
+                  SizedBox(height: 16),
+                  OnboardingInformationView(),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 }
 
 
